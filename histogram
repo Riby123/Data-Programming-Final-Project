@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Histogram Chart</title>
+    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+</head>
+<body class="{{ page_class }}">
+    <div id="chartContainer" style="width: 100%; height: 400px;"></div>
+
+    <script>
+        google.charts.load('current', {packages: ['corechart']});
+        google.charts.setOnLoadCallback(drawHistogramChart);
+
+        function drawHistogramChart() {
+            var data = new google.visualization.DataTable();
+            data.addColumn('string', 'Change');
+            data.addColumn('number', 'Frequency');
+
+            // Add data from Flask variable (stock_data)
+            {% for stock in stock_data %}
+                data.addRow(['{{ stock.identifier }}', {{ stock.change }}]);
+            {% endfor %}
+
+            var options = {
+                title: 'HISTOGRAM CHART', // Change the title accordingly
+                chartArea: { width: '80%', height: '60%' }, // Adjust chart area dimensions
+                hAxis: {
+                    title: 'Range',
+                    titleTextStyle: { color: '#333' }, // Text color for the title
+                    textStyle: { color: '#333' }, // Text color for axis labels
+                },
+                vAxis: {
+                    title: 'Frequency',
+                    titleTextStyle: { color: '#333' }, // Text color for the title
+                    textStyle: { color: '#333' } // Text color for axis labels
+                }
+            };
+
+            var chart = new google.visualization.Histogram(document.getElementById('chartContainer'));
+            chart.draw(data, options);
+        }
+    </script>
+</body>
+</html>
